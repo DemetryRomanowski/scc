@@ -7,8 +7,6 @@ Please donate if you find this program useful
 **Please note this program is free for open source use commercially or non commercially as long as its open source
   for closed source please email demetryromanowski@gmail.com for licensing**
   
-  
-
 Scc is a SQL Composer/Compiler allowing the user to create a database project and split it into many files
   The jist as follows 
   - Create a directory structure
@@ -200,6 +198,6 @@ Scc is a SQL Composer/Compiler allowing the user to create a database project an
 3. A plugin for DataGrip to allow for project creation and compiling without running scc externally
 4. feature requests ? 
 
-#### To request a feature email me @ demetryromanowski@gmail.com
+#### To request a feature email me: demetryromanowski@gmail.com
 
 
