@@ -68,7 +68,7 @@ public:
                 if(!(test_string == "." || test_string == "..")) {
                     //Try to find the extension
                     //TODO(Demetry): Make this so it actually looks for the file extension not just the extension in the string
-                    if(test_string.find(ext)) {
+                    if(test_string.find(ext) != test_string.npos) {
                         _ret.emplace_back(ent->d_name);
                     }
                 }

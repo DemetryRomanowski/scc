@@ -9,7 +9,6 @@
 #include <fstream>
 
 #include "headers/FileUtils.h"
-#include "headers/StringUtils.h"
 
 std::ifstream in_file;
 std::string input_file;
@@ -33,6 +32,13 @@ void compile_wild_card(const std::string & /*path*/, int /*i*/, std::vector<std:
  */
 int main(int argc, char *argv[]) {
     if (argc == 1) {
+
+        //see if the output file already exists
+        if (FileUtils::exists(std::string("main.sql")))
+        {
+            std::wcerr << "Default output file already exists please delete or move it. " << std::endl;
+        }
+
         //look for default files
         if (!FileUtils::exists(std::string("makesqlc"))) {
             if (!FileUtils::exists(std::string("make.sqlc"))) {
@@ -56,6 +62,17 @@ int main(int argc, char *argv[]) {
                 return EXIT_SUCCESS;
             }
             output_file = argv[i + 1];
+
+            if (FileUtils::exists(output_file))
+            {
+                std::wcerr << "Output file will be over written" << std::endl;
+                if( remove(output_file.c_str()) != 0)
+                {
+                    perror("Error with deleting the file");
+                    return EXIT_FAILURE;
+                }
+            }
+
         }
     }
 
@@ -122,8 +139,8 @@ void compile_file() {
                         } else {
                             compile_wild_card(include_path, line_num, &compiled_output);
                         }
-                    }//Include the file in the output
-                    else {
+                    //Include the file in the output
+                    } else {
                         std::string inc_line;
                         std::string input_file_path = StringUtils::trim_copy(StringUtils::split(line, ' ')[1]);
 
@@ -137,9 +154,8 @@ void compile_file() {
                             break;
                         }
                     }
-                }
                 //Check for script tag
-                else if (line.find("script") != line.npos) {
+                } else if (line.find("script") != line.npos) {
                     compiling_script = true;
                     continue;
                 }
