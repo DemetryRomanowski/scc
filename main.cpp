@@ -89,51 +89,15 @@ void compile_file() {
             lines.push_back(tmp);
 
         //Line number
-        int i = 0;
+        int line_num = 0;
 
         //Read the lines of the file
         for (std::string line : lines) {
-            i++;
+            line_num++;
 
             if (!line.empty()) {
                 //Ignore comment line
                 if (line.find('-', 0) != line.npos && line.find('-', 1) != line.npos) continue;
-                //Check for include tag
-                if (line.find("include") != line.npos)
-                {
-                    //Check if there is a wild card
-                    if (line.find('*') != line.npos)
-                    {
-                        std::string include_path_raw = StringUtils::split(line, ' ')[1];
-                        std::string include_path = StringUtils::split(include_path_raw, '*')[0];
-
-                        if(include_path == "*.sql"){
-                            compile_wild_card(FileUtils::get_current_directory(), i, &compiled_output);
-                        }else{
-                            compile_wild_card(include_path, i, &compiled_output);
-                        }
-                    }//Include the file in the output
-                    else
-                    {
-                        std::string inc_line;
-                        std::string input_file_path = StringUtils::trim_copy(StringUtils::split(line, ' ')[1]);
-
-                        std::ifstream inc_stream(input_file_path);
-
-                        if (inc_stream.is_open()) {
-                            while (std::getline(inc_stream, inc_line))
-                                compiled_output.push_back(inc_line + "\n");
-                        } else {
-                            std::cerr << "Could not open include file at line: " << i << std::endl;
-                            break;
-                        }
-                    }
-                }
-                    //Check for script tag
-                else if (line.find("script") != line.npos) {
-                    compiling_script = true;
-                    continue;
-                }
 
                 //Check if compiling script
                 if (compiling_script) {
@@ -143,6 +107,40 @@ void compile_file() {
                     }
 
                     compiled_output.push_back(line);
+                    continue;
+                }
+
+                //Check for include tag
+                if (line.find("include") != line.npos) {
+                    //Check if there is a wild card
+                    if (line.find('*') != line.npos) {
+                        std::string include_path_raw = StringUtils::split(line, ' ')[1];
+                        std::string include_path = StringUtils::split(include_path_raw, '*')[0];
+
+                        if (include_path == "*.sql") {
+                            compile_wild_card(FileUtils::get_current_directory(), line_num, &compiled_output);
+                        } else {
+                            compile_wild_card(include_path, line_num, &compiled_output);
+                        }
+                    }//Include the file in the output
+                    else {
+                        std::string inc_line;
+                        std::string input_file_path = StringUtils::trim_copy(StringUtils::split(line, ' ')[1]);
+
+                        std::ifstream inc_stream(input_file_path);
+
+                        if (inc_stream.is_open()) {
+                            while (std::getline(inc_stream, inc_line))
+                                compiled_output.push_back(inc_line + "\n");
+                        } else {
+                            std::cerr << "Could not open include file at line: " << line_num << std::endl;
+                            break;
+                        }
+                    }
+                }
+                //Check for script tag
+                else if (line.find("script") != line.npos) {
+                    compiling_script = true;
                     continue;
                 }
             }
@@ -163,7 +161,7 @@ void compile_file() {
         //Close the file
         sqlfile.close();
     }
-    catch (std::exception& e) {
+    catch (std::exception &e) {
         //Some kind of error occurred
         std::cerr << "Unknown error has occurred: " << e.what() << std::endl;
         in_file.close();
