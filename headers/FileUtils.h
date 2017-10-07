@@ -66,7 +66,9 @@ public:
                 std::string test_string = ent->d_name;
 
                 if(!(test_string == "." || test_string == "..")) {
-                    if(StringUtils::split(test_string, '.')[1] == ext) {
+                    //Try to find the extension
+                    //TODO(Demetry): Make this so it actually looks for the file extension not just the extension in the string
+                    if(test_string.find(ext)) {
                         _ret.emplace_back(ent->d_name);
                     }
                 }
