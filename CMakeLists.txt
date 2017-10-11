@@ -21,6 +21,6 @@ set(CMAKE_CXX_STANDARD 11)
 #endif()
 
 set(SOURCE_FILES main.cpp headers/StringUtils.h headers/FileUtils.h)
-
 add_executable(scc ${SOURCE_FILES})
-target_link_libraries(scc ${Boost_LIBRARIES})
+
+#target_link_libraries(scc ${Boost_LIBRARIES})

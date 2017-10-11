@@ -15,12 +15,12 @@
 #include "StringUtils.h"
 
 #ifdef  _WIN32
-    #include <io.h>
-    #include <direct.h>
+#include <io.h>
+#include <direct.h>
 
 #define GetCurrentDir _getcwd
 #elif __unix__
-    #include <unistd.h>
+#include <unistd.h>
     #include <zconf.h>
     #define GetCurrentDir getcwd
 #else
